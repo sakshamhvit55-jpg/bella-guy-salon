@@ -75,41 +75,6 @@ async function logout() {
   await supabase.auth.signOut();
   router.push("/login");
 }
-function downloadCSV() {
-  const headers = [
-    "Name",
-    "Phone",
-    "Service",
-    "Date",
-    "Time",
-    "Status",
-  ];
-
-  const rows = bookings.map((b) => [
-    b.full_name,
-    b.phone,
-    b.service,
-    b.booking_date,
-    b.booking_time,
-    b.status,
-  ]);
-
-  const csvContent = [
-    headers.join(","),
-    ...rows.map((r) => r.join(",")),
-  ].join("\n");
-
-  const blob = new Blob([csvContent], {
-    type: "text/csv;charset=utf-8;",
-  });
-
-  const link = document.createElement("a");
-
-  link.href = URL.createObjectURL(blob);
-  link.download = "bookings.csv";
-  link.click();
-}
-
 async function deleteContact(id: number) {
   if (!confirm("Delete this message?")) return;
 
@@ -128,21 +93,12 @@ return (
     Bella & Guy Admin Panel
   </h1>
 
-<div className="flex gap-2">
-  <button
-    onClick={downloadCSV}
-    className="bg-green-600 hover:bg-green-700 px-4 py-2 rounded"
-  >
-    Download CSV
-  </button>
-
   <button
     onClick={logout}
     className="bg-red-600 hover:bg-red-700 px-4 py-2 rounded"
   >
     Logout
   </button>
-</div>
 </div>
 
 <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4 mb-8">

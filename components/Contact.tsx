@@ -1,32 +1,84 @@
+"use client";
+
+import { useState } from "react";
+import { supabase } from "../lib/supabase";
+
 export default function Contact() {
+  const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [message, setMessage] = useState("");
+
+  async function submitForm(e: any) {
+    e.preventDefault();
+
+    const { error } = await supabase
+      .from("contacts")
+      .insert([
+        {
+          name,
+          phone,
+          message,
+        },
+      ]);
+
+if (error) {
+  console.log(error);
+  alert(error.message);
+  return;
+}
+
+    alert("Message Sent Successfully!");
+
+    setName("");
+    setPhone("");
+    setMessage("");
+  }
+
   return (
     <section className="bg-white py-20 px-6">
-      <div className="max-w-5xl mx-auto text-center">
+      <div className="max-w-5xl mx-auto">
 
-        <h2 className="text-4xl font-bold text-black mb-8">
+        <h2 className="text-4xl font-bold text-center text-black mb-8">
           Contact Us
         </h2>
 
-        <div className="space-y-4 text-lg text-gray-700">
+        <form
+          onSubmit={submitForm}
+          className="max-w-xl mx-auto space-y-4"
+        >
+          <input
+            type="text"
+            placeholder="Your Name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            className="w-full border p-3 rounded"
+            required
+          />
 
-          <p>
-            Bella & Guy Unisex Salon
-          </p>
+          <input
+            type="text"
+            placeholder="Phone Number"
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
+            className="w-full border p-3 rounded"
+            required
+          />
 
-          <p>
-            Wave Galleria Shopping Complex,
-            Wave City, Ghaziabad
-          </p>
+          <textarea
+            placeholder="Your Message"
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            className="w-full border p-3 rounded h-32"
+            required
+          />
 
-          <p>
-            +91 99996 01212
-          </p>
-
-          <p>
-            Open Daily: 9:00 AM - 9:00 PM
-          </p>
-
-        </div>
+          <button
+            type="submit"
+            className="bg-black text-white px-6 py-3 rounded"
+          >
+            Send Message
+          </button>
+        </form>
 
       </div>
     </section>
